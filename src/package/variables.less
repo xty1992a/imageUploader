@@ -1,0 +1,74 @@
+// region mixins
+.shadow(@val: 0 0 10px rgba(0,0,0,.1)) {
+  background-color: #fff;
+  box-shadow: @val;
+}
+
+.drop-shadow() {
+  background-image: radial-gradient(transparent 0, transparent 8px, #fff 8px);
+  background-size: 50% 50%;
+  background-repeat: repeat-x;
+  background-position: -50px 0;
+  filter: drop-shadow(2px 0 8px rgba(0, 0, 0, 0.1));
+}
+
+.two-dot(@bg: #fafafa, @size: 14px) {
+  position: relative;
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    width: @size;
+    height: @size;
+    border-radius: 50%;
+    background-color: @bg;
+    top: 50%;
+    z-index: 1;
+  }
+  &:before {
+    left: -@size / 2;
+    transform: translateY(-50%) rotate(135deg);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.07) inset;
+  }
+  &:after {
+    right: -@size / 2;
+    transform: translateY(-50%) rotate(-45deg);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.07) inset;
+  }
+}
+
+.line-dot() {
+  &:after {
+    content: '';
+    font-size: 10px;
+    position: absolute;
+    background-image: radial-gradient(#fff 0, #fff .4em, transparent .4em);
+    background-repeat: repeat-y;
+    background-size: 1.4em 1.4em;
+    width: 1.4em;
+    bottom: 0;
+    right: -.7em;
+    top: 0;
+  }
+}
+
+.ellipsis(@w:auto) {
+  width: @w;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+}
+
+
+.full-column(@h: 50px) {
+  display: flex;
+  height: @h;
+  justify-content: space-between;
+  flex-direction: column;
+  p {
+    line-height: 1.1;
+  }
+}
+
+
+// endregion

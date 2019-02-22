@@ -1,0 +1,71 @@
+@import "./variables";
+
+.action {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  left: 0;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  &.action__show {
+    .action-model {
+      opacity: 1;
+    }
+
+    .action-bottom {
+      transform: translate3d(0, 0, 0);
+    }
+
+    .action-center {
+      transform: translate3d(-50%, -50%, 0);
+    }
+
+    .action-right {
+      transform: translate3d(-50%, -50%, 0);
+    }
+  }
+
+  .action-model {
+    opacity: 0;
+    transition: .3s;
+  }
+
+  .mask {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, .4);
+  }
+
+  .action-bottom {
+    transform: translate3d(0, 100%, 0);
+    transition: .3s;
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+
+  .action-center {
+    position: absolute;
+    transform: translate3d(-50%, -60%, 0);
+    transition: transform .3s;
+    top: 50%;
+    left: 50%;
+  }
+
+  .action-right {
+    position: absolute;
+    transform: translate3d(100%, -50%, 0);
+    transition: transform .3s;
+    top: 50%;
+    left: 50%;
+  }
+}

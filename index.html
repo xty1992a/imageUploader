@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+  <title>Title</title>
+  <script type="text/javascript" src="/node_modules/cropperjs/dist/cropper.min.js"></script>
+  <link rel="stylesheet" href="/node_modules/cropperjs/dist/cropper.min.css">
+  <script type="text/javascript" src="/lib/imageUploader.js"></script>
+  <link rel="stylesheet" href="/lib/imageUploader.css">
+  <style>
+    img {
+      min-height: 300px;
+      min-width: 300px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    }
+  </style>
+</head>
+<body>
+<input type="file" id="file">
+<!--<div class="witcher">
+  <img src="/static/1.jpg" alt="" style="width: 100%;">
+</div>-->
+
+<div class="block">
+  <h3 class="block-title">直出图片</h3>
+  <img src="" alt="" id="cropedImage">
+</div>
+
+<div class="block">
+  <h3 class="block-title">回传图片</h3>
+  <img src="" alt="" id="cdnImage">
+</div>
+
+</body>
+</html>
