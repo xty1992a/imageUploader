@@ -1,8 +1,9 @@
 {
   "name": "@redbuck/image-uploader",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "crop image and upload",
-  "main": "index.js",
+  "main": "lib/imageUploader.js",
+  "unpkg": "lib/imageUploader.js",
   "scripts": {
     "prepublishOnly": "npm run build",
     "dev": "webpack-dev-server --config build/webpack.dev.conf.js",

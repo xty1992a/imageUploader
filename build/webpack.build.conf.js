@@ -42,6 +42,6 @@ module.exports = merge(base, {
 	new MiniCssExtractPlugin({
 	  filename: 'imageUploader.css',
 	}),
-	new BundleAnalyzerPlugin(),
+	// new BundleAnalyzerPlugin(),
   ],
 });

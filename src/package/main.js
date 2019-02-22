@@ -6,13 +6,6 @@ import {css, getParentByClassName, isMobile, getObjectURL, dataURLtoBlob} from '
 import cropImage from './CropperAction'
 import request from './request'
 
-const upload = img => {
-  let form = new FormData()
-  let blob = dataURLtoBlob(img)
-  form.append('imgFile', blob, Date.now() + '.png')
-  return request('/yunhuiyuan/UploadFile/UploadSingleImage?isCompress=true', form)
-}
-
 const cropperOptions = {
   viewMode: 1,
   dragMode: 'move',
@@ -27,7 +20,10 @@ const cropperOptions = {
 const defaultOptions = {
   width: 100,
   height: 100,
-  MIME: 'image/png',
+  MIME: 'png',
+  blob: false,
+  uploadUrl: '/yunhuiyuan/UploadFile/UploadSingleImage?isCompress=true',
+  fileName: 'imgFile',
 }
 
 class EmitAble {
@@ -72,7 +68,7 @@ export default class ImageUploader extends EmitAble {
 		  this.uploadImage(res)
 		})
 		.catch(e => {
-		  this.$options.error && this.$options.error(e)
+		  this.fire('error', e)
 		})
   }
 
@@ -96,7 +92,10 @@ export default class ImageUploader extends EmitAble {
 	  return
 	}
 	try {
-	  let res = await upload(img)
+	  let form = new FormData()
+	  let blob = this.$options.blob ? img : dataURLtoBlob(img)
+	  form.append(this.$options.fileName, blob, Date.now() + '.' + this.$options.MIME)
+	  let res = await request(this.$options.url, form)
 	  this.fire('upload', res)
 	} catch (e) {
 	  this.fire('upload-error', e)

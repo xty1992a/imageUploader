@@ -30,7 +30,7 @@ export class CropperAction extends Component {
 	  width: this.props.width,
 	  height: this.props.height,
 	})
-	let url = cvs.toDataURL(this.props.MIME)
+	let url = cvs.toDataURL('image/'+this.props.MIME)
 	let result = url
 	if (this.props.blob) {
 	  result = dataURLtoBlob(url)

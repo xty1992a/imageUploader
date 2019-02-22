@@ -2,7 +2,7 @@
 import 'core-js'
 import ImageUploader from './package/main'
 import request from './package/request'
-import {dataURLtoBlob} from './package/dom';
+import {dataURLtoBlob, getObjectURL} from './package/dom';
 
 const login = () => {
   let form = new FormData()
@@ -20,7 +20,7 @@ const login = () => {
 
 const upload = img => {
   let form = new FormData()
-  let blob = dataURLtoBlob(img)
+  let blob = (img instanceof Blob) ? img : dataURLtoBlob(img)
   form.append('imgFile', blob, Date.now() + '.png')
   return request('/yunhuiyuan/UploadFile/UploadSingleImage?isCompress=true', form)
 }
@@ -35,6 +35,7 @@ const $cdnImage = document.getElementById('cdnImage')
 const uploader = new ImageUploader({
   width: 300,
   height: 300,
+  blob: true,
   upload: (img, callback) => {
 	upload(img)
 		.then(res => {
@@ -46,9 +47,10 @@ const uploader = new ImageUploader({
 
 // 截图事件,此时尚未提交,回调注入base64图片
 uploader.on('crop', e => {
+  console.log(e)
   $cropedImage.style.width = uploader.$options.width + 'px'
   $cropedImage.style.height = uploader.$options.height + 'px'
-  $cropedImage.src = e
+  $cropedImage.src = (e instanceof Blob) ? getObjectURL(e) : e
 })
 
 // 上传成功事件.回调注入后端返回response
@@ -57,6 +59,9 @@ uploader.on('upload', e => {
   $cdnImage.style.width = uploader.$options.width + 'px'
   $cdnImage.style.height = uploader.$options.height + 'px'
   $cdnImage.src = e.url
+})
+uploader.on('error', e => {
+  console.log('uploader err ', e)
 })
 
 $file.addEventListener('change', e => {
