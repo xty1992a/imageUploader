@@ -84,22 +84,24 @@ export default class ImageUploader extends EmitAble {
   }
 
   // 将图片上传后台
-  uploadImage = async (img) => {
+  uploadImage = (img) => {
 	if (this.$options.upload) {
 	  this.$options.upload(img, (err, res) => {
 		err ? this.fire('upload-error', err) : this.fire('upload', res)
 	  })
 	  return
 	}
-	try {
-	  let form = new FormData()
-	  let blob = this.$options.blob ? img : dataURLtoBlob(img)
-	  form.append(this.$options.fileName, blob, Date.now() + '.' + this.$options.MIME)
-	  let res = await request(this.$options.url, form)
-	  this.fire('upload', res)
-	} catch (e) {
-	  this.fire('upload-error', e)
-	}
+	
+	let form = new FormData()
+	let blob = this.$options.blob ? img : dataURLtoBlob(img)
+	form.append(this.$options.fileName, blob, Date.now() + '.' + this.$options.MIME)
+	request(this.$options.url, form)
+		.then(res => {
+			this.fire('upload', res)
+		})
+		.catch(e => {
+			this.fire('upload-error', e)
+		})
   }
 
   static isMobile = isMobile
