@@ -44,12 +44,14 @@ const uploader = new ImageUploader({
   },
 })
 
+// 截图事件,此时尚未提交,回调注入base64图片
 uploader.on('crop', e => {
   $cropedImage.style.width = uploader.$options.width + 'px'
   $cropedImage.style.height = uploader.$options.height + 'px'
   $cropedImage.src = e
 })
 
+// 上传成功事件.回调注入后端返回response
 uploader.on('upload', e => {
   console.log('upload success', e)
   $cdnImage.style.width = uploader.$options.width + 'px'
@@ -57,11 +59,20 @@ uploader.on('upload', e => {
   $cdnImage.src = e.url
 })
 
-uploader.on('error', e => {
-  console.log(e)
-})
-
 $file.addEventListener('change', e => {
   uploader.uploadFile(e)
+})
+
+const bUploader = new ImageUploader({
+  width: 300,
+  height: 300,
+})
+
+bUploader.on('upload', e => {
+  console.log('btn croped image', e.url)
+})
+
+$btn.addEventListener('click', e => {
+  bUploader.showCropper('/static/1.jpg')
 })
 

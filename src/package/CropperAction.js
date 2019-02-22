@@ -26,8 +26,11 @@ export class CropperAction extends Component {
 
   crop = () => {
 	if (!this.croppable) return
-	let cvs = this.cropper.getCroppedCanvas()
-	let url = cvs.toDataURL('image/jpeg')
+	let cvs = this.cropper.getCroppedCanvas({
+	  width: this.props.width,
+	  height: this.props.height,
+	})
+	let url = cvs.toDataURL(this.props.MIME)
 	let result = url
 	if (this.props.blob) {
 	  result = dataURLtoBlob(url)
@@ -55,16 +58,24 @@ export class CropperAction extends Component {
 	if (!files[0].type.includes('image')) {
 	  return false
 	}
-	this.cropper && this.cropper.replace(getObjectURL(files[0]))
+	this.objectUrl && URL.revokeObjectURL(this.objectUrl)
+	this.objectUrl = getObjectURL(files[0])
+	this.cropper && this.cropper.replace(this.objectUrl)
   }
 
   componentDidMount() {
+	// 如果链接是blob链接,标记该链接为objectUrl,在更换,销毁时将会统一revoke
+	let {url} = this.props
+	if (url && /blob/.test(url)) {
+	  this.objectUrl = url
+	}
 	setTimeout(() => {
 	  this._action.show();
 	}, 20);
   }
 
   componentWillUnmount() {
+	this.objectUrl && URL.revokeObjectURL(this.objectUrl)
 	this.cropper && this.cropper.destroy()
   }
 

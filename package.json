@@ -12,6 +12,10 @@
     "type": "git",
     "url": "git+https://github.com/xty1992a/imageUploader.git"
   },
+  "files": [
+    "src",
+    "lib"
+  ],
   "keywords": [
     "crop",
     "image",

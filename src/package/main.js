@@ -27,6 +27,7 @@ const cropperOptions = {
 const defaultOptions = {
   width: 100,
   height: 100,
+  MIME: 'image/png',
 }
 
 class EmitAble {
