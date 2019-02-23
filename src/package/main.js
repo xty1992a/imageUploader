@@ -95,7 +95,7 @@ export default class ImageUploader extends EmitAble {
 	  let form = new FormData()
 	  let blob = this.$options.blob ? img : dataURLtoBlob(img)
 	  form.append(this.$options.fileName, blob, Date.now() + '.' + this.$options.MIME)
-	  let res = await request(this.$options.url, form)
+	  let res = await request(this.$options.uploadUrl, form)
 	  this.fire('upload', res)
 	} catch (e) {
 	  this.fire('upload-error', e)
