@@ -28,6 +28,7 @@ cropperOptions| `Object` | 见下方|cropperjs的配置
 upload|`Function`| undefined|自定义上传回调(覆盖内置上传逻辑)
 uploadUrl|`String`| '/yunhuiyuan/UploadFile/UploadSingleImage?isCompress=true'|上传路径
 fileName|`String`|'imgFile'|图片字段
+el|`Element`|undefined|隐形file标签的挂载点
 
 cropperOptions: (详见[cropper官网](https://fengyuanchen.github.io/cropperjs/))
 ```javascript
@@ -79,4 +80,36 @@ uploader.on('upload', res => {
 })
 ```
 
+#### 示例
+##### 直接载入图片
+```javascript
+const bUploader = new ImageUploader({
+  width: 300,
+  height: 300,
+})
 
+ bUploader.showCropper('/static/1.jpg')
+```
+
+##### 监听file的change事件
+```javascript
+const uploader = new ImageUploader({
+  width: 300,
+  height: 300
+})
+
+// 监听file载入事件
+$file.addEventListener('change', e => {
+  uploader.uploadFile(e)
+})
+```
+
+##### 绑定元素
+给options的el字段绑定一个dom即可,组件会将一个透明的file插入该元素.
+```javascript
+const iUploader = new ImageUploader({
+  width: 300,
+  height: 300,
+  el: document.getElementById('insert')
+})
+```

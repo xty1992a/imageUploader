@@ -64,10 +64,12 @@ uploader.on('error', e => {
   console.log('uploader err ', e)
 })
 
+// 监听file载入事件
 $file.addEventListener('change', e => {
   uploader.uploadFile(e)
 })
 
+// 替换指定图片
 const bUploader = new ImageUploader({
   width: 300,
   height: 300,
@@ -81,3 +83,9 @@ $btn.addEventListener('click', e => {
   bUploader.showCropper('/static/1.jpg')
 })
 
+// 指定挂载dom
+const iUploader = new ImageUploader({
+  width: 300,
+  height: 300,
+  el: document.getElementById('insert')
+})

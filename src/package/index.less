@@ -1,6 +1,6 @@
 @import "~cropperjs/dist/cropper.min.css";
 
-.btn {
+.img-cropper__btn {
   background-color: #fff;
   border: 0;
   font-size: 14px;
@@ -9,17 +9,23 @@
   line-height: 1;
   outline: none;
   -webkit-tap-highlight-color: transparent;
+
+  & .btn-normal {
+    color: #FA9500;
+  }
+
+  &.btn-primary {
+    color: #fff;
+    background-color: #FA9500;
+    background: linear-gradient(to right, #fac11b, #FA9500);
+  }
 }
 
-.btn-cancel {
-}
-
-.btn-normal {
-  color: #FA9500;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #FA9500;
-  background: linear-gradient(to right, #fac11b, #FA9500);
+.img-cropper__insert-file-input {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  left: 0;
+  opacity: 0;
 }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+  <title>Title</title>
+  <script type="text/javascript" src="https://unpkg.com/@redbuck/image-uploader@0.0.5/lib/imageUploader.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@redbuck/image-uploader@0.0.5/lib/imageUploader.css">
+</head>
+<body>
+<button id="btn">按钮</button>
+
+<script type="text/javascript">
+  var uploader = new ImageUploader({
+	width: 300,
+	height: 300,
+	el: document.getElementById('btn'),
+  })
+
+  uploader.on('upload-error', err => {
+	console.log('upload-error', err)
+  })
+  uploader.on('upload', res => {
+	console.log('upload success', res)
+  })
+</script>
+</body>
+</html>

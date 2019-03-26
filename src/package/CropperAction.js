@@ -93,12 +93,12 @@ export class CropperAction extends Component {
 			  <img src={this.props.url} alt="" onLoad={this.createCrop} crossOrigin="anonymous" ref={c => this._img = c}/>
 			</div>
 			<div className="crop-foot">
-			  <button className="btn btn-cancel" onClick={this.close}>取消</button>
-			  <button className="btn btn-normal">
+			  <button className="img-cropper__btn btn-cancel" onClick={this.close}>取消</button>
+			  <button className="img-cropper__btn btn-normal">
 				<input type="file" onChange={this.reload}/>
 				<span>重新选择</span>
 			  </button>
-			  <button className="btn btn-primary" onClick={this.confirm}>确定</button>
+			  <button className="img-cropper__btn btn-primary" onClick={this.confirm}>确定</button>
 			</div>
 		  </div>
 		</Action>
