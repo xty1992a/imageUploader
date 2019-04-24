@@ -16,7 +16,9 @@
   },
   "files": [
     "src",
-    "lib"
+    "lib",
+    "static",
+    "index.html"
   ],
   "keywords": [
     "crop",
