@@ -29,10 +29,14 @@ module.exports = merge(base, {
 	contentBase: path.resolve(__dirname, '..'),
 	compress: true,
 	hot: true,
-	port: 8080,
+	port: 8081,
 	host: 'localhost',
 	publicPath: '/',
 	disableHostCheck: true,
+	proxy: {
+	  '/api/*': 'http://localhost:3001/',
+	  changeOrigin: true,
+	},
   },
   plugins: [
 	new webpack.HotModuleReplacementPlugin(),

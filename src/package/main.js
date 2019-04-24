@@ -18,12 +18,14 @@ const cropperOptions = {
   background: true,
 }
 const defaultOptions = {
-  width: 100,
+  width: 100, // 截图输出尺寸
   height: 100,
-  MIME: 'png',
-  blob: false,
-  uploadUrl: '/yunhuiyuan/UploadFile/UploadSingleImage?isCompress=true',
+  MIME: 'png', // 输出图片格式
+  blob: false,  // 输出图片类型 (base64)
+  uploadUrl: '/',
   fileName: 'imgFile',
+  stop: true,
+  getFormData: void 0,
 }
 
 class EmitAble {
@@ -46,11 +48,11 @@ export default class ImageUploader extends EmitAble {
 	super()
 	this.$options = {
 	  ...defaultOptions,
+	  ...opt,
 	  cropperOptions: {
 		...cropperOptions,
 		...(opt.cropperOptions || {}),
 	  },
-	  ...opt,
 	}
 	if (opt.el && opt.el instanceof Element) {
 	  this.insertDom()
@@ -64,6 +66,12 @@ export default class ImageUploader extends EmitAble {
 	input.type = 'file'
 	input.addEventListener('change', this.uploadFile)
 	input.className = 'img-cropper__insert-file-input'
+	// 阻止事件冒泡,防止点击事件被拦截掉
+	if (this.$options.stop) {
+	  input.addEventListener('click', function (e) {
+		e.stopPropagation()
+	  })
+	}
 
 	el.style.position = 'relative'
 	el.style.overflow = 'hidden'
@@ -109,9 +117,8 @@ export default class ImageUploader extends EmitAble {
 	  return
 	}
 
-	let form = new FormData()
-	let blob = this.$options.blob ? img : dataURLtoBlob(img)
-	form.append(this.$options.fileName, blob, Date.now() + '.' + this.$options.MIME)
+	const form = this.generateForm(img)
+
 	request(this.$options.uploadUrl, form)
 		.then(res => {
 		  this.fire('upload', res)
@@ -119,6 +126,25 @@ export default class ImageUploader extends EmitAble {
 		.catch(e => {
 		  this.fire('upload-error', e)
 		})
+  }
+
+  // 生成formData
+  generateForm(img) {
+	let form = new FormData()
+	let {getFormData} = this.$options
+	let formData = {}
+
+	if (typeof getFormData === 'function') {
+	  formData = getFormData()
+	}
+
+	Object.keys(formData).forEach(key => {
+	  form.append(key, formData[key])
+	})
+	let blob = this.$options.blob ? img : dataURLtoBlob(img)
+	form.append(this.$options.fileName, blob, Date.now() + '.' + this.$options.MIME)
+
+	return form
   }
 
   static isMobile = isMobile

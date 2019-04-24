@@ -26,8 +26,9 @@ MIME| `String` | 'image/png'|输出及上传返回图片格式
 blob|`Boolean`|false|crop派发blob
 cropperOptions| `Object` | 见下方|cropperjs的配置
 upload|`Function`| undefined|自定义上传回调(覆盖内置上传逻辑)
-uploadUrl|`String`| '/yunhuiyuan/UploadFile/UploadSingleImage?isCompress=true'|上传路径
-fileName|`String`|'imgFile'|图片字段
+uploadUrl|`String`| '/'|上传路径
+fileName|`String`|'imgFile'|图片字段名
+formData|`Object`|{}|除了图片字段外,其余form字段
 el|`Element`|undefined|隐形file标签的挂载点
 
 cropperOptions: (详见[cropper官网](https://fengyuanchen.github.io/cropperjs/))
@@ -48,7 +49,7 @@ cropperOptions: (详见[cropper官网](https://fengyuanchen.github.io/cropperjs/
 ```
 uploader.on(event, callback)
 ```
-支持事件
+支持的事件
 
 事件|参数|描述
 --:|--:|--:|
@@ -58,19 +59,23 @@ upload|后端response|上传成功事件.
 upload-error|后端response|上传失败事件.
 
 #### 上传行为
-未配置upload方法时,crop之后将立即向*当前域名下*/`uploadUrl`提交一个formData,携带图片转换成的blob,字段名为配置`fileName`.
+未配置upload方法时,crop之后将立即向配置项中的`uploadUrl`提交一个formData,携带图片转换成的blob,字段名为配置项中的`fileName`.如果还有其余字段,可以放在配置项的formData中.
 
-如果有更多的参数,可以配置`upload`,当配置该字段时,插件将忽略上述行为.改为调用该方法.
+
+如果需要完全自定义上传行为,可以配置`upload`方法,当配置该字段时,插件将忽略上述行为.改为调用该方法.
 注入imageData和一个callback.callback用于继续派发`upload`或`upload-error`事件.因此,在自定义逻辑执行完之后,建议调用该callback,以保证组件的行为一致.
 callback为node的错误优先风格.以下为示例.
 ```
 const uploader = new ImageUploader({
   upload: (img, callback) => {
     myUploadApi(img)
-    .then(res => {
-        callback(null, res)
-    })
-    .catch(callback)
+        .then(res => {
+        // 调用callback,派发实例的upload事件
+            callback(null, res)
+        })
+        .catch(err => {
+            callback(err, null)
+        })
   },
 })
 
@@ -88,6 +93,7 @@ const bUploader = new ImageUploader({
   height: 300,
 })
 
+// 指定需要截取的图片
  bUploader.showCropper('/static/1.jpg')
 ```
 

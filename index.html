@@ -14,27 +14,48 @@
       min-width: 300px;
       box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     }
+
+    .block {
+      width: 350px;
+    }
+
+    .block-title {
+      white-space: nowrap;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
   </style>
 </head>
 <body>
-<button id="btn">按钮</button>
-<input type="file" id="file">
-
-<!--插入file标签-->
-<button id="insert">按钮</button>
-<!--<div class="witcher">
-  <img src="/static/1.jpg" alt="" style="width: 100%;">
-</div>-->
 
 <div class="block">
-  <h3 class="block-title">直出图片</h3>
+  <h3 class="block-title">
+    <span>从file获取图片</span>
+    <input type="file" id="file">
+  </h3>
+  <img src="" alt="" id="cdnImage">
+</div>
+
+<div class="block">
+  <h3 class="block-title">
+    <span>截取图片链接</span>
+    <button id="btn">按钮</button>
+  </h3>
   <img src="" alt="" id="cropedImage">
 </div>
 
 <div class="block">
-  <h3 class="block-title">回传图片</h3>
-  <img src="" alt="" id="cdnImage">
+  <h3 class="block-title">
+    <span>插入dom</span>
+    <button id="insert">按钮</button>
+  </h3>
+  <img src="" alt="" id="btnImage">
 </div>
+
 
 </body>
 </html>
