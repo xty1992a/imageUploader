@@ -28,7 +28,7 @@ cropperOptions| `Object` | 见下方|cropperjs的配置
 upload|`Function`| undefined|自定义上传回调(覆盖内置上传逻辑)
 uploadUrl|`String`| '/'|上传路径
 fileName|`String`|'imgFile'|图片字段名
-formData|`Object`|{}|除了图片字段外,其余form字段
+getFormData|`Function`|{}|返回除了图片字段外,其余form字段的函数
 el|`Element`|undefined|隐形file标签的挂载点
 
 cropperOptions: (详见[cropper官网](https://fengyuanchen.github.io/cropperjs/))
@@ -59,7 +59,7 @@ upload|后端response|上传成功事件.
 upload-error|后端response|上传失败事件.
 
 #### 上传行为
-未配置upload方法时,crop之后将立即向配置项中的`uploadUrl`提交一个formData,携带图片转换成的blob,字段名为配置项中的`fileName`.如果还有其余字段,可以放在配置项的formData中.
+未配置upload方法时,crop之后将立即向配置项中的`uploadUrl`提交一个formData,携带图片转换成的blob,字段名为配置项中的`fileName`.如果还有其余字段,可以配置`getFormData字段`,返回一个对象,这个对象将被合并到表单中
 
 
 如果需要完全自定义上传行为,可以配置`upload`方法,当配置该字段时,插件将忽略上述行为.改为调用该方法.
