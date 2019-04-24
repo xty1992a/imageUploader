@@ -4,12 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
   <title>Title</title>
-  <script type="text/javascript" src="https://unpkg.com/@redbuck/image-uploader@0.0.5/lib/imageUploader.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/@redbuck/image-uploader@0.0.5/lib/imageUploader.css">
+  <script type="text/javascript" src="../lib/imageUploader.js"></script>
+  <link rel="stylesheet" href="../lib/imageUploader.css">
 </head>
 <body>
-<button id="btn">按钮</button>
 
+
+<div class="block">
+  <h3>确定后查看network,检查发出的请求</h3>
+  <button id="btn">按钮</button>
+  <img src="" alt="" id="cdnImage" style="width: 300px;height: 300px;">
+</div>
 <script type="text/javascript">
   var uploader = new ImageUploader({
 	width: 300,
@@ -17,6 +22,9 @@
 	el: document.getElementById('btn'),
   })
 
+  uploader.on('crop', e => {
+	document.getElementById('cdnImage').src = e
+  })
   uploader.on('upload-error', err => {
 	console.log('upload-error', err)
   })
