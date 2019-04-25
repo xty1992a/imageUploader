@@ -30,6 +30,11 @@ uploadUrl|`String`| '/'|上传路径
 fileName|`String`|'imgFile'|图片字段名
 getFormData|`Function`|{}|返回除了图片字段外,其余form字段的函数
 el|`Element`|undefined|隐形file标签的挂载点
+stop|`Boolean`|true|组件是否拦截事件,不冒泡(修复插入dom时,事件被拦截)
+crop|`Boolean`|true|是否需要截图
+multi|`Boolean`|false|是否开启批量传图,批量传图不能截图
+responseFormat|`Function`|o=>o|格式化后端返回,批量传图时的预览会使用这个函数
+deleteRequest|`Function`|undefined|批量上传中的删除接口,用于删除远程图片
 
 cropperOptions: (详见[cropper官网](https://fengyuanchen.github.io/cropperjs/))
 ```javascript
@@ -57,6 +62,7 @@ crop|imageData|截图事件,截图完成,上传之前.blob或base64
 error|Error|打开截图框的错误
 upload|后端response|上传成功事件.
 upload-error|后端response|上传失败事件.
+multi-upload|批量传图确定|返回上传结果
 
 #### 上传行为
 未配置upload方法时,crop之后将立即向配置项中的`uploadUrl`提交一个formData,携带图片转换成的blob,字段名为配置项中的`fileName`.如果还有其余字段,可以配置`getFormData字段`,返回一个对象,这个对象将被合并到表单中
@@ -119,3 +125,44 @@ const iUploader = new ImageUploader({
   el: document.getElementById('insert')
 })
 ```
+
+#### 直接传图
+配置crop字段为false即可
+```javascript
+	const cUploader = new ImageUploader({
+	  blob: true,
+	  crop: false,
+	  uploadUrl: 'http://up-z2.qiniup.com/',
+	  el: $('#upload'),
+	  fileName: 'file',
+	  getFormData() {
+		return {
+		  key: 'demo/' + Date.now() + '.png',
+		  token,
+		}
+	  },
+	})
+```
+
+#### 批量传图
+multi字段设置true,批量传图不支持截图,点击确定时,一次性返回上传结果
+```javascript
+	const dUploader = new ImageUploader({
+	  blob: true,
+	  uploadUrl: 'http://up-z2.qiniup.com/',
+	  el: $('#multiUpload'),
+	  fileName: 'file',
+	  multi: true,
+	  getFormData() {
+		return {
+		  key: 'demo/' + Date.now() + '.png',
+		  token,
+		}
+	  },
+	})
+
+    dUploader.on('multi-upload', res => {
+      console.log(res.complete)
+    })
+```
+

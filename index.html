@@ -4,12 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
   <title>Title</title>
-  <script type="text/javascript" src="./lib/imageUploader.js"></script>
-  <link rel="stylesheet" href="./lib/imageUploader.css">
+  <!--<script type="text/javascript" src="./lib/imageUploader.js"></script>-->
+  <!--<link rel="stylesheet" href="./lib/imageUploader.css">-->
   <style>
-    img {
+    .block img {
       min-height: 300px;
       min-width: 300px;
+      max-height: 300px;
+      max-width: 300px;
       box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     }
 
@@ -21,38 +23,76 @@
       white-space: nowrap;
     }
 
-    body {
+    .layout {
       display: flex;
       align-items: center;
+      justify-content: space-evenly;
       flex-wrap: wrap;
+      background-color: #fff;
+      margin: 10px;
+      padding: 10px 10px 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
     }
+
+    .layout-title {
+      flex: 0 0 100%;
+      padding-left: 10px;
+    }
+
+    body {
+      background-color: #f7f7f7;
+    }
+
   </style>
 </head>
 <body>
 
-<div class="block">
-  <h3 class="block-title">
-    <span>从file获取图片</span>
-    <input type="file" id="file">
-  </h3>
-  <img src="" alt="" id="cdnImage">
-</div>
+<section class="layout">
+  <h2 class="layout-title">截图上传模式</h2>
 
-<div class="block">
-  <h3 class="block-title">
-    <span>截取图片链接</span>
-    <button id="btn">按钮</button>
-  </h3>
-  <img src="" alt="" id="cropedImage">
-</div>
+  <div class="block">
+    <h3 class="block-title">
+      <span>从file获取图片</span>
+      <input type="file" id="file">
+    </h3>
+    <img src="" alt="" id="cdnImage">
+  </div>
 
-<div class="block">
-  <h3 class="block-title">
-    <span>插入dom</span>
-    <button id="insert">按钮</button>
-  </h3>
-  <img src="" alt="" id="btnImage">
-</div>
+  <div class="block">
+    <h3 class="block-title">
+      <span>截取图片链接</span>
+      <button id="btn">按钮</button>
+    </h3>
+    <img src="" alt="" id="cropedImage">
+  </div>
+
+  <div class="block">
+    <h3 class="block-title">
+      <span>插入dom</span>
+      <button id="insert">按钮</button>
+    </h3>
+    <img src="" alt="" id="btnImage">
+  </div>
+</section>
+
+<section class="layout">
+  <h2 class="layout-title">直接上传模式</h2>
+  <div class="block" style="flex-basis: 100%;padding-left: 50px;">
+    <h3 class="block-title">
+      <span>不截图直接上传</span>
+      <button id="upload">按钮</button>
+    </h3>
+    <img src="" alt="" id="uploadImage">
+  </div>
+
+  <div class="block" style="flex-basis: 100%;padding-left: 50px;" id="multi-block">
+    <h3 class="block-title">
+      <span>批量上传</span>
+      <button id="multiUpload">按钮</button>
+    </h3>
+  </div>
+</section>
 
 
 </body>

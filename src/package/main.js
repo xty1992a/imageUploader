@@ -4,6 +4,7 @@
 import './index.less'
 import {css, getParentByClassName, isMobile, getObjectURL, dataURLtoBlob} from './dom'
 import cropImage from './CropperAction'
+import showFileAction from './FileAction'
 import request from './request'
 
 const cropperOptions = {
@@ -25,7 +26,11 @@ const defaultOptions = {
   uploadUrl: '/',
   fileName: 'imgFile',
   stop: true,
+  crop: true, // 是否需要截图,多选无效
+  multi: false, // 是否开启批量传图,批量传图下不能截图
   getFormData: void 0,
+  responseFormat: o => o.data,
+  deleteRequest: void 0,
 }
 
 class EmitAble {
@@ -43,6 +48,7 @@ class EmitAble {
 export default class ImageUploader extends EmitAble {
   rowData = null
   rowUrl = null
+  uploadList = []
 
   constructor(opt) {
 	super()
@@ -60,8 +66,21 @@ export default class ImageUploader extends EmitAble {
   }
 
   insertDom() {
-	console.log('insert')
-	let {el} = this.$options
+	let {el, multi} = this.$options
+	el.style.position = 'relative'
+	el.style.overflow = 'hidden'
+
+	if (multi) {
+	  const btn = this.generateMultiBtn()
+	  el.appendChild(btn)
+	}
+	else {
+	  const input = this.generateFile()
+	  el.appendChild(input)
+	}
+  }
+
+  generateFile() {
 	let input = document.createElement('input')
 	input.type = 'file'
 	input.addEventListener('change', this.uploadFile)
@@ -72,11 +91,19 @@ export default class ImageUploader extends EmitAble {
 		e.stopPropagation()
 	  })
 	}
+	return input
+  }
 
-	el.style.position = 'relative'
-	el.style.overflow = 'hidden'
-
-	el.appendChild(input)
+  generateMultiBtn() {
+	let button = document.createElement('button')
+	button.className = 'img-cropper__insert-file-input'
+	button.addEventListener('click', this.showFileAction)
+	if (this.$options.stop) {
+	  button.addEventListener('click', function (e) {
+		e.stopPropagation()
+	  })
+	}
+	return button
   }
 
   // 图片载入完成,显示截图框
@@ -97,29 +124,44 @@ export default class ImageUploader extends EmitAble {
 		})
   }
 
+  showFileAction = (opt = this.$options) => {
+	console.log('show file action', this.$options.responseFormat)
+	showFileAction({
+	  uploadRequest: this.uploadRequest,
+	  responseFormat: this.$options.responseFormat, // 格式化后端返回值
+	  deleteRequest: this.$options.deleteRequest,
+	  isMobile,
+	  ...opt,
+	})
+		.then(res => {
+		  this.fire('multi-upload', res)
+		})
+		.catch(e => {
+		  this.fire('error', e)
+		})
+  }
+
   // 提供给实例用于加载input的文件
-  uploadFile = (e) => {
+  uploadFile = (e, crop = this.$options.crop) => {
+	console.log(e, crop, 'is crop')
+
 	let files = e.target.files || e.dataTransfer.files
 	if (!files.length) return false
 	if (!files[0].type.includes('image')) {
 	  return false
 	}
 	this.rowData = files[0]
-	this.showCropper(getObjectURL(this.rowData))
+	if (crop) {
+	  this.showCropper(getObjectURL(this.rowData))
+	}
+	else {
+	  this.uploadImage(this.rowData)
+	}
   }
 
   // 将图片上传后台
   uploadImage = (img) => {
-	if (this.$options.upload) {
-	  this.$options.upload(img, (err, res) => {
-		err ? this.fire('upload-error', err) : this.fire('upload', res)
-	  })
-	  return
-	}
-
-	const form = this.generateForm(img)
-
-	request(this.$options.uploadUrl, form)
+	this.uploadRequest(img)
 		.then(res => {
 		  this.fire('upload', res)
 		})
@@ -127,6 +169,21 @@ export default class ImageUploader extends EmitAble {
 		  this.fire('upload-error', e)
 		})
   }
+
+  // 上传接口
+  uploadRequest = (img) => new Promise((resolve, reject) => {
+	if (this.$options.upload) {
+	  this.$options.upload(img, (err, res) => {
+		err ? reject(err) : resolve(res)
+	  })
+	}
+	else {
+	  const form = this.generateForm(img)
+	  request(this.$options.uploadUrl, form)
+		  .then(resolve)
+		  .catch(reject)
+	}
+  })
 
   // 生成formData
   generateForm(img) {

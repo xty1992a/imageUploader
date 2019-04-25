@@ -1,5 +1,42 @@
 @import "~cropperjs/dist/cropper.min.css";
 
+
+.uploader-action {
+  .uploader-action-body {
+    &.desktop {
+      width: 700px;
+      height: 500px;
+      background-color: #fff;
+      border-radius: 5px;
+    }
+
+    &.mobile {
+      height: 100vh;
+      width: 100vw;
+      background-color: #fff;
+    }
+  }
+
+
+  .uploader-action-foot {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    height: 50px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .btn-normal {
+    overflow: hidden;
+    position: relative;
+  }
+}
+
+
 .img-cropper__btn {
   background-color: #fff;
   border: 0;
@@ -21,11 +58,11 @@
   }
 }
 
-.img-cropper__insert-file-input {
+.img-cropper__insert-file-input, img-cropper__insert-btn {
   position: absolute;
-  bottom: 0;
-  right: 0;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0;
 }

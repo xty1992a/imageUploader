@@ -30,7 +30,7 @@ export class CropperAction extends Component {
 	  width: this.props.width,
 	  height: this.props.height,
 	})
-	let url = cvs.toDataURL('image/'+this.props.MIME)
+	let url = cvs.toDataURL('image/' + this.props.MIME)
 	let result = url
 	if (this.props.blob) {
 	  result = dataURLtoBlob(url)
@@ -82,20 +82,20 @@ export class CropperAction extends Component {
   render(props, state, context) {
 	return (
 		<Action
-			className="cropper-action"
+			className="uploader-action crop-action"
 			ref={child => this._action = child}
 			onCancel={this.actionCancel}
 			position={this.props.isMobile ? 'right' : 'center'}
 			stop={true}
 		>
-		  <div className={`crop-wrap ${this.props.isMobile ? 'mobile' : 'desktop'}`}>
+		  <div className={`uploader-action-body ${this.props.isMobile ? 'mobile' : 'desktop'}`}>
 			<div className="crop-body">
 			  <img src={this.props.url} alt="" onLoad={this.createCrop} crossOrigin="anonymous" ref={c => this._img = c}/>
 			</div>
-			<div className="crop-foot">
+			<div className="uploader-action-foot">
 			  <button className="img-cropper__btn btn-cancel" onClick={this.close}>取消</button>
 			  <button className="img-cropper__btn btn-normal">
-				<input type="file" onChange={this.reload}/>
+				<input type="file" onChange={this.reload} className="img-cropper__insert-file-input"/>
 				<span>重新选择</span>
 			  </button>
 			  <button className="img-cropper__btn btn-primary" onClick={this.confirm}>确定</button>
