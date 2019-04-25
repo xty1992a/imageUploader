@@ -9,7 +9,7 @@ function formatResult(raw) {
   return result
 }
 
-export default function (url, data, method) {
+export default function (url, data, method, process) {
   return new Promise((resolve, reject) => {
 	const xhr = new XMLHttpRequest();
 	xhr.open(method || 'POST', url);
@@ -25,6 +25,11 @@ export default function (url, data, method) {
 		  console.log('Error: ' + xhr.status);
 		  reject(xhr.status)
 		}
+	  }
+	}
+	xhr.upload.onprogress = function (event) {
+	  if (event.lengthComputable) {
+		process && process(Math.floor(event.loaded / event.total * 100))
 	  }
 	}
   })

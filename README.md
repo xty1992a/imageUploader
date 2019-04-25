@@ -33,7 +33,7 @@ el|`Element`|undefined|隐形file标签的挂载点
 stop|`Boolean`|true|组件是否拦截事件,不冒泡(修复插入dom时,事件被拦截)
 crop|`Boolean`|true|是否需要截图
 multi|`Boolean`|false|是否开启批量传图,批量传图不能截图
-responseFormat|`Function`|o=>o|格式化后端返回,批量传图时的预览会使用这个函数
+responseFormat|`Function`|o=>o.data|格式化后端返回,批量传图时的预览会使用这个函数
 deleteRequest|`Function`|undefined|批量上传中的删除接口,用于删除远程图片
 
 cropperOptions: (详见[cropper官网](https://fengyuanchen.github.io/cropperjs/))
@@ -145,7 +145,7 @@ const iUploader = new ImageUploader({
 ```
 
 #### 批量传图
-multi字段设置true,批量传图不支持截图,点击确定时,一次性返回上传结果
+multi字段设置true,批量传图不支持截图,点击确定时,一次性返回上传结果,支持拖拽上传
 ```javascript
 	const dUploader = new ImageUploader({
 	  blob: true,
@@ -159,6 +159,16 @@ multi字段设置true,批量传图不支持截图,点击确定时,一次性返�
 		  token,
 		}
 	  },
+	  // 删除已上传的图片
+      deleteRequest(payload, callback) {
+        API.delQiNiuItem(payload.response.data.key)
+            .then(res => {
+              console.log(res)
+              // 调用callback,组件删除本地图片
+              callback()
+            })
+            .catch(callback)
+      },
 	})
 
     dUploader.on('multi-upload', res => {

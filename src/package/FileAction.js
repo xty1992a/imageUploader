@@ -3,6 +3,8 @@ import {dataURLtoBlob, getObjectURL} from './dom'
 import Action from './Action'
 import './fileAction.less'
 
+const preventDefault = e => e.preventDefault()
+
 class FileItem extends Component {
   state = {
 	complete: false,
@@ -102,6 +104,7 @@ export class FileAction extends Component {
   }
 
   uploadFile = (e) => {
+	e.preventDefault()
 	let files = [...(e.target.files || e.dataTransfer.files)]
 	if (!files.length) return false
 
@@ -117,16 +120,12 @@ export class FileAction extends Component {
 
 	// this.uploadByStep(imageFiles)
 	setTimeout(() => {
-	  this.uploadCount = 0
 	  this.forceUpload()
 	}, 20)
   }
 
   forceUpload() {
-	if (this.uploadCount === this._fileItem.length) return
-
 	let fileItem = this._fileItem.find(it => !it.state.complete)
-	this.uploadCount++
 	if (!fileItem) return
 	fileItem.upload()
 		.then(res => {
@@ -158,7 +157,34 @@ export class FileAction extends Component {
 	}
   })
 
+  preventDefault() {
+	document.addEventListener('dragleave', preventDefault)
+	document.addEventListener('drop', preventDefault)
+	document.addEventListener('dragenter', preventDefault)
+	document.addEventListener('dragover', preventDefault)
+  }
+
+  releaseDefault() {
+	document.removeEventListener('dragleave', preventDefault)
+	document.removeEventListener('drop', preventDefault)
+	document.removeEventListener('dragenter', preventDefault)
+	document.removeEventListener('dragover', preventDefault)
+  }
+
+  addChild(c) {
+	if (!c) return
+	if (!c.base) return
+	let index = this._fileItem.findIndex(it => it.__key === c.__key)
+	if (index === -1) {
+	  this._fileItem.push(c)
+	}
+	else {
+	  this._fileItem.splice(index, 1, c)
+	}
+  }
+
   componentDidMount() {
+	this.preventDefault()
 	setTimeout(() => {
 	  this._action.show();
 	  console.log(this.state.uploadFileList)
@@ -166,6 +192,7 @@ export class FileAction extends Component {
   }
 
   componentWillUnmount() {
+	this.releaseDefault()
   }
 
   render(props, state, context) {
@@ -175,17 +202,16 @@ export class FileAction extends Component {
 			ref={child => this._action = child}
 			onCancel={this.actionCancel}
 			position={this.props.isMobile ? 'right' : 'center'}
-			stop={true}
 		>
 		  <div className={`uploader-action-body ${this.props.isMobile ? 'mobile' : 'desktop'}`}>
-			<div className="file-action-body">
+			<div className="file-action-body" onDrop={this.uploadFile}>
 			  {
 				this.state.uploadFileList.map(file => (
 					<FileItem file={file}
 							  onDelete={this.deleteFileItem}
 							  uploadRequest={this.props.uploadRequest}
 							  responseFormat={this.props.responseFormat}
-							  ref={c => this._fileItem.push(c)}
+							  ref={c => this.addChild(c)}
 							  key={file.name}/>
 				))
 			  }
