@@ -1,6 +1,6 @@
 {
   "name": "@redbuck/image-uploader",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "crop image and upload",
   "main": "lib/imageUploader.js",
   "unpkg": "lib/imageUploader.js",
@@ -46,6 +46,7 @@
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.5.0",
     "style-loader": "^0.23.1",
+    "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.29.4",
     "webpack-bundle-analyzer": "^3.0.4",
     "webpack-cli": "^3.1.2",
@@ -53,7 +54,7 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "preact": "^8.4.2",
-    "cropperjs": "^1.4.3"
+    "cropperjs": "^1.4.3",
+    "preact": "^8.4.2"
   }
 }
