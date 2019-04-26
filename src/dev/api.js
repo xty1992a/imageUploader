@@ -1,5 +1,5 @@
 import request from '../package/request'
-import {dataURLtoBlob} from '../package/dom';
+import {dataURLtoBlob} from '../package/tools';
 
 export const myUploadApi = (img, token) => {
   let form = new FormData()

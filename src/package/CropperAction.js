@@ -1,10 +1,14 @@
 import preact, {h, render, Component} from 'preact'
 import Cropper from 'cropperjs'
-import {dataURLtoBlob, getObjectURL} from './dom'
+import {dataURLtoBlob, getObjectURL} from './tools'
 import Action from './Action'
 import './cropAction.less'
 
 export class CropperAction extends Component {
+  state = {
+	imgPath: '',
+  }
+
   constructor(props) {
 	super(props)
   }
@@ -60,6 +64,9 @@ export class CropperAction extends Component {
 	}
 	this.objectUrl && URL.revokeObjectURL(this.objectUrl)
 	this.objectUrl = getObjectURL(files[0])
+	this.setState({
+	  imgPath: this.objectUrl,
+	})
 	this.cropper && this.cropper.replace(this.objectUrl)
   }
 
@@ -67,6 +74,9 @@ export class CropperAction extends Component {
 	// 如果链接是blob链接,标记该链接为objectUrl,在更换,销毁时将会统一revoke
 	let {url} = this.props
 	if (url && /blob/.test(url)) {
+	  this.setState({
+		imgPath: url,
+	  })
 	  this.objectUrl = url
 	}
 	setTimeout(() => {
@@ -90,7 +100,16 @@ export class CropperAction extends Component {
 		>
 		  <div className={`uploader-action-body ${this.props.isMobile ? 'mobile' : 'desktop'}`}>
 			<div className="crop-body">
-			  <img src={this.props.url} alt="" onLoad={this.createCrop} crossOrigin="anonymous" ref={c => this._img = c}/>
+			  {
+				this.state.imgPath ? (
+					<img src={this.state.imgPath} alt="" onLoad={this.createCrop} crossOrigin="anonymous" ref={c => this._img = c}/>
+				) : (
+					<div className="file-btn">
+					  <span>+</span>
+					  <input type="file" onChange={this.reload} className="img-cropper__insert-file-input"/>
+					</div>
+				)
+			  }
 			</div>
 			<div className="uploader-action-foot">
 			  <button className="img-cropper__btn btn-cancel" onClick={this.close}>取消</button>

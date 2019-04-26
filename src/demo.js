@@ -40,6 +40,7 @@ function createImg(src) {
 
 // 上传成功事件.回调注入后端返回response
 	uploader.on('upload', e => {
+	  console.log(e.data.path)
 	  $cdnImage.src = e.data.path
 	})
 	uploader.on('error', e => {
@@ -74,6 +75,31 @@ function createImg(src) {
 
 	$btn.addEventListener('click', e => {
 	  bUploader.showCropper('/static/1.jpg')
+	})
+
+	// endregion
+
+	// region 截取指定图片
+	const fUploader = new ImageUploader({
+	  width: 300,
+	  height: 300,
+	  blob: true,
+	  uploadUrl: 'http://up-z2.qiniup.com/',
+	  fileName: 'file',
+	  getFormData() {
+		return {
+		  key: 'demo/' + Date.now() + '.png',
+		  token,
+		}
+	  },
+	})
+
+	fUploader.on('upload', res => {
+	  $('#showBtnImage').src = res.data.path
+	})
+
+	$('#showBtn').addEventListener('click', e => {
+	  fUploader.showCropper()
 	})
 
 	// endregion
@@ -165,25 +191,35 @@ function createImg(src) {
 
 	// endregion
 
+	/*?
+	* accessId
+	policy
+	signature
+	url
+	* */
 	// region 异步获取formData
 	const eUploader = new ImageUploader({
 	  blob: true,
 	  crop: false,
-	  uploadUrl: 'http://up-z2.qiniup.com/',
+	  uploadUrl: 'http://aliyun-files.1card1.cn',
 	  el: $('#asyncUpload'),
 	  fileName: 'file',
 	  getFormDataAsync(callback) {
 		setTimeout(() => {
 		  callback({
 			key: 'demo/' + Date.now() + '.png',
-			token,
+			// token,
+			OSSAccessKeyId: 'LTAIyKHA0bwGxC81',
+			policy: 'eyJleHBpcmF0aW9uIjogIjIwMTktMDQtMjZUMTU6NTY6MTMuNDQ1WiIsImNvbmRpdGlvbnMiOiBbWyJjb250ZW50LWxlbmd0aC1yYW5nZSIsIDAsIDEwNDg1NzYwMF1dfQ==',
+			signature: 'flaAZkAUQUJq3pk/tHi08oPFwA8=',
+			success_action_status: '200',
 		  })
 		}, 1000)
 	  },
 	})
 
 	eUploader.on('upload', res => {
-	  console.log(res)
+	  console.log(res, 'success')
 	  $('#asyncUploadImage').src = res.data.path
 	})
 

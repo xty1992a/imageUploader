@@ -1,5 +1,5 @@
 import preact, {h, render, Component} from 'preact'
-import {dataURLtoBlob, getObjectURL} from './dom'
+import {dataURLtoBlob, getObjectURL} from './tools'
 import Action from './Action'
 import './fileAction.less'
 

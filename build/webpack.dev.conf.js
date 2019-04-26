@@ -29,7 +29,7 @@ module.exports = merge(base, {
 	contentBase: path.resolve(__dirname, '..'),
 	compress: true,
 	hot: true,
-	port: 8081,
+	port: 7778,
 	host: 'localhost',
 	publicPath: '/',
 	disableHostCheck: true,

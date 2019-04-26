@@ -18,7 +18,7 @@ export default function (url, data, method, process) {
 	  const DONE = 4;
 	  const OK = 200;
 	  if (xhr.readyState === DONE) {
-		if (xhr.status === OK) {
+		if (xhr.status >= 200 && xhr.status < 300) {
 		  resolve(formatResult(xhr.responseText))
 		}
 		else {

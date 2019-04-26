@@ -2,7 +2,7 @@
  * Created by TY-xie on 2018/3/29.
  */
 import './index.less'
-import {css, getParentByClassName, isMobile, getObjectURL, dataURLtoBlob} from './dom'
+import {css, getParentByClassName, isMobile, getObjectURL, dataURLtoBlob, rdm} from './tools'
 import cropImage from './CropperAction'
 import showFileAction from './FileAction'
 import request from './request'
@@ -33,6 +33,21 @@ const defaultOptions = {
   deleteRequest: void 0,
 }
 
+const form2Obj = form => {
+  try {
+
+	if (!form instanceof FormData) return form
+	const obj = {}
+	const keys = form.keys()
+	for (var key of keys) {
+	  obj[key] = form.get(key)
+	}
+	return obj
+  } catch (e) {
+	console.log(e)
+  }
+}
+
 class EmitAble {
   task = {}
 
@@ -47,8 +62,6 @@ class EmitAble {
 
 export default class ImageUploader extends EmitAble {
   rowData = null
-  rowUrl = null
-  uploadList = []
 
   constructor(opt) {
 	super()
@@ -108,8 +121,6 @@ export default class ImageUploader extends EmitAble {
 
   // 图片载入完成,显示截图框
   showCropper = (url) => {
-	if (!url) return false
-	this.rowUrl = url
 	cropImage({
 	  url,
 	  isMobile,
@@ -183,7 +194,12 @@ export default class ImageUploader extends EmitAble {
 		  .then(form => {
 			return request(this.$options.uploadUrl, form)
 		  })
-		  .then(resolve)
+		  .then(res => {
+			resolve({
+			  ...res,
+			  formData: this.formData,
+			})
+		  })
 		  .catch(reject)
 	}
   })
@@ -207,6 +223,7 @@ export default class ImageUploader extends EmitAble {
 	  if (typeof getFormData === 'function') {
 		let formData = getFormData()
 		if (typeof formData === 'object') {
+		  this.formData = formData
 		  Object.keys(formData).forEach(key => {
 			form.append(key, formData[key])
 		  })
@@ -217,6 +234,7 @@ export default class ImageUploader extends EmitAble {
 	  if (typeof getFormDataAsync === 'function') {
 		getFormDataAsync((formData) => {
 		  if (typeof formData === 'object') {
+			this.formData = formData
 			Object.keys(formData).forEach(key => {
 			  form.append(key, formData[key])
 			})
@@ -232,4 +250,5 @@ export default class ImageUploader extends EmitAble {
   static isMobile = isMobile
   static getObjectUrl = getObjectURL
   static dataURLtoBlob = dataURLtoBlob
+  static rdm = rdm
 }

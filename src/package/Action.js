@@ -32,7 +32,7 @@ export default class Action extends Component {
 	  let el = this.base;
 	  if (!el) return
 	  render(null, el.parentNode, el);
-	  el.remove();
+	  el && el.parentNode && el.parentNode.removeChild(el);
 	}, 320);
   }
 
