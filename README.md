@@ -28,7 +28,8 @@ cropperOptions| `Object` | 见下方|cropperjs的配置
 upload|`Function`| undefined|自定义上传回调(覆盖内置上传逻辑)
 uploadUrl|`String`| '/'|上传路径
 fileName|`String`|'imgFile'|图片字段名
-getFormData|`Function`|{}|返回除了图片字段外,其余form字段的函数
+getFormData|`Function`|undefined|返回除了图片字段外,其余form字段的函数
+getFormDataAsync|`Function`|undefined|异步的getFormData
 el|`Element`|undefined|隐形file标签的挂载点
 stop|`Boolean`|true|组件是否拦截事件,不冒泡(修复插入dom时,事件被拦截)
 crop|`Boolean`|true|是否需要截图

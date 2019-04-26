@@ -178,8 +178,11 @@ export default class ImageUploader extends EmitAble {
 	  })
 	}
 	else {
-	  const form = this.generateForm(img)
-	  request(this.$options.uploadUrl, form)
+	  // const form =  this.generateForm(img)
+	  this.generateForm(img)
+		  .then(form => {
+			return request(this.$options.uploadUrl, form)
+		  })
 		  .then(resolve)
 		  .catch(reject)
 	}
@@ -187,21 +190,43 @@ export default class ImageUploader extends EmitAble {
 
   // 生成formData
   generateForm(img) {
-	let form = new FormData()
-	let {getFormData} = this.$options
-	let formData = {}
-
-	if (typeof getFormData === 'function') {
-	  formData = getFormData()
-	}
-
-	Object.keys(formData).forEach(key => {
-	  form.append(key, formData[key])
+	return new Promise(resolve => {
+	  this.getFormData()
+		  .then(form => {
+			let blob = this.$options.blob ? img : dataURLtoBlob(img)
+			form.append(this.$options.fileName, blob, Date.now() + '.' + this.$options.MIME)
+			resolve(form)
+		  })
 	})
-	let blob = this.$options.blob ? img : dataURLtoBlob(img)
-	form.append(this.$options.fileName, blob, Date.now() + '.' + this.$options.MIME)
+  }
 
-	return form
+  getFormData() {
+	return new Promise(resolve => {
+	  let form = new FormData()
+	  let {getFormData, getFormDataAsync} = this.$options
+	  if (typeof getFormData === 'function') {
+		let formData = getFormData()
+		if (typeof formData === 'object') {
+		  Object.keys(formData).forEach(key => {
+			form.append(key, formData[key])
+		  })
+		}
+		resolve(form)
+		return
+	  }
+	  if (typeof getFormDataAsync === 'function') {
+		getFormDataAsync((formData) => {
+		  if (typeof formData === 'object') {
+			Object.keys(formData).forEach(key => {
+			  form.append(key, formData[key])
+			})
+		  }
+		  resolve(form)
+		})
+		return
+	  }
+	  resolve(form)
+	})
   }
 
   static isMobile = isMobile

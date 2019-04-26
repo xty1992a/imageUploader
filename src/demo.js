@@ -165,6 +165,30 @@ function createImg(src) {
 
 	// endregion
 
+	// region 异步获取formData
+	const eUploader = new ImageUploader({
+	  blob: true,
+	  crop: false,
+	  uploadUrl: 'http://up-z2.qiniup.com/',
+	  el: $('#asyncUpload'),
+	  fileName: 'file',
+	  getFormDataAsync(callback) {
+		setTimeout(() => {
+		  callback({
+			key: 'demo/' + Date.now() + '.png',
+			token,
+		  })
+		}, 1000)
+	  },
+	})
+
+	eUploader.on('upload', res => {
+	  console.log(res)
+	  $('#asyncUploadImage').src = res.data.path
+	})
+
+	// endregion
+
   } catch (e) {
 	console.log(e)
   }
