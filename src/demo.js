@@ -30,6 +30,9 @@ function createImg(src) {
 	  blob: true,
 	  uploadUrl: 'http://up-z2.qiniup.com/',
 	  fileName: 'file',
+	  limit: 10,
+	  toast: window.Toast,
+	  overSizeMessage: 'asdf',
 	  getFormData() {
 		return {
 		  key: 'demo/' + Date.now() + '.png',
@@ -79,13 +82,14 @@ function createImg(src) {
 
 	// endregion
 
-	// region 截取指定图片
+	// region 命令式调用
 	const fUploader = new ImageUploader({
 	  width: 300,
 	  height: 300,
 	  blob: true,
 	  uploadUrl: 'http://up-z2.qiniup.com/',
 	  fileName: 'file',
+	  description: '最佳比例640*400',
 	  getFormData() {
 		return {
 		  key: 'demo/' + Date.now() + '.png',

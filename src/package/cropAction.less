@@ -1,14 +1,39 @@
 @import "./variables";
 
 .crop-action {
+
+  .uploader-action-head {
+    position: absolute;
+    right: 0;
+    top: 0;
+    left: 0;
+    text-align: center;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+
+    h3 {
+      margin: 0;
+      background-color: #f7f7f7;
+      line-height: 36px;
+    }
+
+    p {
+      font-size: 12px;
+      line-height: 2;
+      color: #999;
+      margin: 0;
+    }
+  }
+
   .crop-body {
     position: absolute;
     overflow: hidden;
     bottom: 50px;
     right: 0;
-    top: 0;
+    top: 60px;
     left: 0;
     background-color: #fafafa;
+    text-align: center;
 
     img {
       max-width: 100%;

@@ -1,6 +1,6 @@
 {
   "name": "@redbuck/image-uploader",
-  "version": "0.1.8",
+  "version": "0.1.10",
   "description": "crop image and upload",
   "main": "lib/imageUploader.js",
   "unpkg": "lib/imageUploader.js",

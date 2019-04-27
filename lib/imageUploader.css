@@ -101,7 +101,7 @@ img-cropper__insert-btn {
   right: 0;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 .action .action-bottom {
   transform: translate3d(0, 100%, 0);
@@ -127,14 +127,35 @@ img-cropper__insert-btn {
   left: 50%;
 }
 
+.crop-action .uploader-action-head {
+  position: absolute;
+  right: 0;
+  top: 0;
+  left: 0;
+  text-align: center;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+}
+.crop-action .uploader-action-head h3 {
+  margin: 0;
+  background-color: #f7f7f7;
+  line-height: 36px;
+}
+.crop-action .uploader-action-head p {
+  font-size: 12px;
+  line-height: 2;
+  color: #999;
+  margin: 0;
+}
 .crop-action .crop-body {
   position: absolute;
   overflow: hidden;
   bottom: 50px;
   right: 0;
-  top: 0;
+  top: 60px;
   left: 0;
   background-color: #fafafa;
+  text-align: center;
 }
 .crop-action .crop-body img {
   max-width: 100%;

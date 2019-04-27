@@ -29,8 +29,12 @@ const defaultOptions = {
   crop: true, // 是否需要截图,多选无效
   multi: false, // 是否开启批量传图,批量传图下不能截图
   getFormData: void 0,
+  description: '',
   responseFormat: o => o.data,
+  limit: 2048000, // 2mb
+  overSizeMessage: '您选择的文件过大',
   deleteRequest: void 0,
+  toast: console.log,
 }
 
 const form2Obj = form => {
@@ -121,6 +125,7 @@ export default class ImageUploader extends EmitAble {
 
   // 图片载入完成,显示截图框
   showCropper = (url) => {
+	console.log(url)
 	cropImage({
 	  url,
 	  isMobile,
@@ -154,14 +159,17 @@ export default class ImageUploader extends EmitAble {
 
   // 提供给实例用于加载input的文件
   uploadFile = (e, crop = this.$options.crop) => {
-	console.log(e, crop, 'is crop')
-
 	let files = e.target.files || e.dataTransfer.files
 	if (!files.length) return false
 	if (!files[0].type.includes('image')) {
 	  return false
 	}
+	console.log(files[0].size)
 	this.rowData = files[0]
+	if (this.rowData.size > this.$options.limit) {
+	  this.$options.toast(this.$options.overSizeMessage)
+	  return
+	}
 	if (crop) {
 	  this.showCropper(getObjectURL(this.rowData))
 	}

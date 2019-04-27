@@ -62,6 +62,11 @@ export class CropperAction extends Component {
 	if (!files[0].type.includes('image')) {
 	  return false
 	}
+	if (files[0].size > this.props.limit) {
+	  this.props.toast(this.props.overSizeMessage)
+	  return
+	}
+
 	this.objectUrl && URL.revokeObjectURL(this.objectUrl)
 	this.objectUrl = getObjectURL(files[0])
 	this.setState({
@@ -71,9 +76,10 @@ export class CropperAction extends Component {
   }
 
   componentDidMount() {
+	console.log(this.props)
 	// 如果链接是blob链接,标记该链接为objectUrl,在更换,销毁时将会统一revoke
 	let {url} = this.props
-	if (url && /blob/.test(url)) {
+	if (typeof url === 'string') {
 	  this.setState({
 		imgPath: url,
 	  })
@@ -82,6 +88,10 @@ export class CropperAction extends Component {
 	setTimeout(() => {
 	  this._action.show();
 	}, 20);
+  }
+
+  geBodyStyle() {
+	return this.props.description ? 'top: 60px' : ' top: 36px;'
   }
 
   componentWillUnmount() {
@@ -99,7 +109,15 @@ export class CropperAction extends Component {
 			stop={true}
 		>
 		  <div className={`uploader-action-body ${this.props.isMobile ? 'mobile' : 'desktop'}`}>
-			<div className="crop-body">
+			<div className="uploader-action-head">
+			  <h3>截图</h3>
+			  {
+				this.props.description && (
+					<p>{this.props.description}</p>
+				)
+			  }
+			</div>
+			<div className="crop-body" style={this.geBodyStyle()}>
 			  {
 				this.state.imgPath ? (
 					<img src={this.state.imgPath} alt="" onLoad={this.createCrop} crossOrigin="anonymous" ref={c => this._img = c}/>
