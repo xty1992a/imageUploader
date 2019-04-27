@@ -34,29 +34,38 @@ export class CropperAction extends Component {
 	  width: this.props.width,
 	  height: this.props.height,
 	})
-	let url = cvs.toDataURL('image/' + this.props.MIME)
-	let result = url
-	if (this.props.blob) {
-	  result = dataURLtoBlob(url)
+	if (cvs) {
+	  let url = cvs.toDataURL('image/' + this.props.MIME)
+	  let result = url
+	  if (this.props.blob) {
+		result = dataURLtoBlob(url)
+	  }
+	  return result
 	}
-	return result
   }
 
-  createCrop = (e) => {
-	let img = this._img
-	let ratio = this.props.width / this.props.height
-	let options = {
-	  ...this.props.cropperOptions,
-	  aspectRatio: ratio,
-	  ready: () => {
-		this.croppable = true
-	  },
-	}
-	console.log(options, this.props)
-	this.cropper = new Cropper(img, options)
+  createCrop = () => {
+	this.croppable = false
+	this.cropper && this.cropper.destroy()
+	console.log('image loaded will create crop')
+	setTimeout(() => {
+	  let img = this._img
+	  let ratio = this.props.width / this.props.height
+	  let options = {
+		...this.props.cropperOptions,
+		aspectRatio: ratio,
+		ready: () => {
+		  console.log('crop is ready')
+		  this.croppable = true
+		},
+	  }
+	  this.cropper = new Cropper(img, options)
+	  console.log(this.cropper)
+	}, 20)
   }
 
   reload = (e) => {
+	// this.cropper && this.cropper.destroy()
 	let files = e.target.files || e.dataTransfer.files
 	if (!files.length) return false
 	if (!files[0].type.includes('image')) {
@@ -72,7 +81,6 @@ export class CropperAction extends Component {
 	this.setState({
 	  imgPath: this.objectUrl,
 	})
-	this.cropper && this.cropper.replace(this.objectUrl)
   }
 
   componentDidMount() {

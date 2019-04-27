@@ -89,6 +89,7 @@ function createImg(src) {
 	  blob: true,
 	  uploadUrl: 'http://up-z2.qiniup.com/',
 	  fileName: 'file',
+	  toast: window.Toast,
 	  description: '最佳比例640*400',
 	  getFormData() {
 		return {
@@ -195,28 +196,24 @@ function createImg(src) {
 
 	// endregion
 
-	/*?
-	* accessId
-	policy
-	signature
-	url
-	* */
 	// region 异步获取formData
 	const eUploader = new ImageUploader({
 	  blob: true,
 	  crop: false,
-	  uploadUrl: 'http://aliyun-files.1card1.cn',
+	  uploadUrl: 'http://up-z2.qiniup.com/',
 	  el: $('#asyncUpload'),
 	  fileName: 'file',
 	  getFormDataAsync(callback) {
+		const t = Toast.loading({duration: 0, message: '获取token...'})
 		setTimeout(() => {
+		  t.clear()
 		  callback({
 			key: 'demo/' + Date.now() + '.png',
-			// token,
-			OSSAccessKeyId: 'LTAIyKHA0bwGxC81',
-			policy: 'eyJleHBpcmF0aW9uIjogIjIwMTktMDQtMjZUMTU6NTY6MTMuNDQ1WiIsImNvbmRpdGlvbnMiOiBbWyJjb250ZW50LWxlbmd0aC1yYW5nZSIsIDAsIDEwNDg1NzYwMF1dfQ==',
-			signature: 'flaAZkAUQUJq3pk/tHi08oPFwA8=',
-			success_action_status: '200',
+			token,
+			/*			OSSAccessKeyId: 'LTAIyKHA0bwGxC81',
+						policy: 'eyJleHBpcmF0aW9uIjogIjIwMTktMDQtMjZUMTU6NTY6MTMuNDQ1WiIsImNvbmRpdGlvbnMiOiBbWyJjb250ZW50LWxlbmd0aC1yYW5nZSIsIDAsIDEwNDg1NzYwMF1dfQ==',
+						signature: 'flaAZkAUQUJq3pk/tHi08oPFwA8=',
+						success_action_status: '200',*/
 		  })
 		}, 1000)
 	  },

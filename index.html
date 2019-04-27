@@ -9,6 +9,10 @@
   <!--<script type="text/javascript" src="./lib/imageUploader.js"></script>-->
   <!--<link rel="stylesheet" href="./lib/imageUploader.css">-->
   <style>
+    .x-toast .center {
+      z-index: 1000;
+    }
+
     .block img {
       min-height: 300px;
       min-width: 300px;
@@ -28,7 +32,6 @@
     .layout {
       display: flex;
       align-items: center;
-      justify-content: space-evenly;
       flex-wrap: wrap;
       background-color: #fff;
       margin: 10px;
@@ -80,7 +83,7 @@
   <div class="block">
     <div class="block-title">
       <span>插入dom</span>
-      <div id="insert">按钮</div>
+      <button id="insert">按钮</button>
     </div>
     <img src="" alt="" id="btnImage">
   </div>
@@ -107,8 +110,8 @@
     <h3 class="block-title">
       <span>异步获取formData</span>
       <button id="asyncUpload">按钮</button>
-      <img src="" alt="" id="asyncUploadImage">
     </h3>
+    <img src="" alt="" id="asyncUploadImage">
   </div>
 </section>
 
