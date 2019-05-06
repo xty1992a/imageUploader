@@ -68,6 +68,9 @@ crop|imageData|截图事件,截图完成,上传之前.blob或base64
 error|Error|打开截图框的错误
 upload|后端response及getFormData的返回结果|上传成功事件.
 upload-error|后端response|上传失败事件.
+upload-start|无|开始上传之前.
+upload-end|无|上传(成功/失败)之后.
+
 multi-upload|最终留下的所有后端response|批量传图确定
 
 #### 上传行为

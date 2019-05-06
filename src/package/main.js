@@ -37,21 +37,6 @@ const defaultOptions = {
   toast: console.log,
 }
 
-const form2Obj = form => {
-  try {
-
-	if (!form instanceof FormData) return form
-	const obj = {}
-	const keys = form.keys()
-	for (var key of keys) {
-	  obj[key] = form.get(key)
-	}
-	return obj
-  } catch (e) {
-	console.log(e)
-  }
-}
-
 class EmitAble {
   task = {}
 
@@ -66,6 +51,7 @@ class EmitAble {
 
 export default class ImageUploader extends EmitAble {
   rowData = null
+  cropper = null
 
   constructor(opt) {
 	super()
@@ -88,11 +74,11 @@ export default class ImageUploader extends EmitAble {
 	el.style.overflow = 'hidden'
 
 	if (multi) {
-	  const btn = this.generateMultiBtn()
+	  const btn = this.insertBtn = this.generateMultiBtn()
 	  el.appendChild(btn)
 	}
 	else {
-	  const input = this.generateFile()
+	  const input = this.insertBtn = this.generateFile()
 	  el.appendChild(input)
 	}
   }
@@ -129,6 +115,9 @@ export default class ImageUploader extends EmitAble {
 	cropImage({
 	  url,
 	  isMobile,
+	  action: cropper => {
+		this.cropper = cropper
+	  },
 	  ...this.$options,
 	})
 		.then(res => {
@@ -180,12 +169,15 @@ export default class ImageUploader extends EmitAble {
 
   // 将图片上传后台
   uploadImage = (img) => {
+	this.fire('upload-start')
 	this.uploadRequest(img)
 		.then(res => {
 		  this.fire('upload', res)
+		  this.fire('upload-end')
 		})
 		.catch(e => {
 		  this.fire('upload-error', e)
+		  this.fire('upload-end')
 		})
   }
 
@@ -211,6 +203,11 @@ export default class ImageUploader extends EmitAble {
 		  .catch(reject)
 	}
   })
+
+  changeCropSize = ({width = this.$options.width, height = this.$options.height}) => {
+	this.$options.width = width
+	this.$options.height = height
+  }
 
   // 生成formData
   generateForm(img) {
@@ -253,6 +250,13 @@ export default class ImageUploader extends EmitAble {
 	  }
 	  resolve(form)
 	})
+  }
+
+  destroy() {
+	this.task = {}
+	if (this.$options.el) {
+	  this.$options.el.removeChild(this.insertBtn)
+	}
   }
 
   static isMobile = isMobile

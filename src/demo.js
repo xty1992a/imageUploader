@@ -103,7 +103,18 @@ function createImg(src) {
 	  $('#showBtnImage').src = res.data.path
 	})
 
+	fUploader.on('upload-start', () => {
+	  Toast.loading({message: '上传中...', duration: 0})
+	})
+	fUploader.on('upload-end', () => {
+	  Toast.clearAll()
+	})
+
 	$('#showBtn').addEventListener('click', e => {
+	  fUploader.changeCropSize({
+		width: 100,
+		height: 200,
+	  })
 	  fUploader.showCropper()
 	})
 

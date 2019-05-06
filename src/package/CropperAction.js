@@ -60,6 +60,7 @@ export class CropperAction extends Component {
 		},
 	  }
 	  this.cropper = new Cropper(img, options)
+	  this.props.action && this.props.action(this.cropper)
 	  console.log(this.cropper)
 	}, 20)
   }
