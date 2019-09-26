@@ -1,5 +1,5 @@
 @import "~cropperjs/dist/cropper.min.css";
-
+@import "//at.alicdn.com/t/font_1282010_zww47jw25o.css";
 
 .uploader-action {
   .uploader-action-body {
@@ -54,6 +54,24 @@
   line-height: 1;
   outline: none;
   -webkit-tap-highlight-color: transparent;
+  position: relative;
+
+  &:after {
+    background-color: #000;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+
+  &:active {
+    &:after {
+      content: '';
+      opacity: .05;
+    }
+  }
 
   & .btn-normal {
     color: #FA9500;
@@ -64,13 +82,23 @@
     background-color: #FA9500;
     background: linear-gradient(to right, #fac11b, #FA9500);
   }
+
+  &.btn-left, &.btn-right {
+    padding: 9px;
+  }
 }
 
-.img-cropper__insert-file-input, img-cropper__insert-btn {
+.img-cropper__insert-file-input, .img-cropper__insert-btn {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   opacity: 0;
+}
+
+.img-cropper__btn {
+  input {
+    z-index: 1;
+  }
 }

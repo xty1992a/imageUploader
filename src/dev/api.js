@@ -8,7 +8,9 @@ export const myUploadApi = (img, token) => {
   form.append('file', blob, fileName)
   form.append('key', 'demo/' + fileName)
   form.append('token', token)
-  return request('http://up-z2.qiniup.com/', form)
+  return request('http://up-z2.qiniup.com/', form,'POST', (e) => {
+    console.log(e, 'progress')
+  })
 }
 
 export const getQiNiuToken = () => request('/api/upload/qiniu_token', {}, 'get');

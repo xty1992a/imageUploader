@@ -1,98 +1,104 @@
-import preact, {h, render, Component} from 'preact'
-import Cropper from 'cropperjs'
-import {dataURLtoBlob, getObjectURL} from './tools'
-import Action from './Action'
-import './cropAction.less'
+import preact, {h, render, Component} from 'preact';
+import Cropper from 'cropperjs';
+import {dataURLtoBlob, getObjectURL} from './tools';
+import Action from './Action';
+import './cropAction.less';
 
 export class CropperAction extends Component {
   state = {
 	imgPath: '',
-  }
+  };
 
   constructor(props) {
-	super(props)
+	super(props);
+	this.rotateDeg = 0;
   }
 
   confirm = () => {
-	console.log('confirm')
-	let result = this.crop()
+	console.log('confirm');
+	let result = this.crop();
 	this.props.promise && this.props.promise.resolve(result);
 	this._action.close();
-  }
+  };
 
   close = () => {
 	this._action.close();
-  }
+  };
 
   actionCancel = () => {
-	this.props.promise && this.props.promise.reject('user cancel !')
-  }
+	this.props.promise && this.props.promise.reject('user cancel !');
+  };
 
   crop = () => {
-	if (!this.croppable) return
+	if (!this.croppable) return;
 	let cvs = this.cropper.getCroppedCanvas({
 	  width: this.props.width,
 	  height: this.props.height,
-	})
+	});
 	if (cvs) {
-	  let url = cvs.toDataURL('image/' + this.props.MIME)
-	  let result = url
+	  let url = cvs.toDataURL('image/' + this.props.MIME);
+	  let result = url;
 	  if (this.props.blob) {
-		result = dataURLtoBlob(url)
+		result = dataURLtoBlob(url);
 	  }
-	  return result
+	  return result;
 	}
-  }
+  };
 
   createCrop = () => {
-	this.croppable = false
-	this.cropper && this.cropper.destroy()
-	console.log('image loaded will create crop')
+	this.croppable = false;
+	this.cropper && this.cropper.destroy();
+	console.log('image loaded will create crop');
 	setTimeout(() => {
-	  let img = this._img
-	  let ratio = this.props.width / this.props.height
+	  let img = this._img;
+	  let ratio = this.props.width / this.props.height;
 	  let options = {
 		...this.props.cropperOptions,
 		aspectRatio: ratio,
 		ready: () => {
-		  console.log('crop is ready')
-		  this.croppable = true
+		  console.log('crop is ready');
+		  this.croppable = true;
 		},
-	  }
-	  this.cropper = new Cropper(img, options)
-	  this.props.action && this.props.action(this.cropper)
-	  console.log(this.cropper)
-	}, 20)
-  }
+	  };
+	  this.cropper = new Cropper(img, options);
+	  this.props.action && this.props.action(this.cropper);
+	  console.log(this.cropper);
+	}, 20);
+  };
 
   reload = (e) => {
 	// this.cropper && this.cropper.destroy()
-	let files = e.target.files || e.dataTransfer.files
-	if (!files.length) return false
+	let files = e.target.files || e.dataTransfer.files;
+	if (!files.length) return false;
 	if (!files[0].type.includes('image')) {
-	  return false
+	  return false;
 	}
 	if (files[0].size > this.props.limit) {
-	  this.props.toast(this.props.overSizeMessage)
-	  return
+	  this.props.toast(this.props.overSizeMessage);
+	  return;
 	}
 
-	this.objectUrl && URL.revokeObjectURL(this.objectUrl)
-	this.objectUrl = getObjectURL(files[0])
+	this.objectUrl && URL.revokeObjectURL(this.objectUrl);
+	this.objectUrl = getObjectURL(files[0]);
 	this.setState({
 	  imgPath: this.objectUrl,
-	})
-  }
+	});
+  };
+
+  rotate = (deg) => {
+	if (!this.croppable) return;
+	this.cropper.rotate(deg);
+  };
 
   componentDidMount() {
-	console.log(this.props)
+	console.log(this.props);
 	// 如果链接是blob链接,标记该链接为objectUrl,在更换,销毁时将会统一revoke
-	let {url} = this.props
+	let {url} = this.props;
 	if (typeof url === 'string') {
 	  this.setState({
 		imgPath: url,
-	  })
-	  this.objectUrl = url
+	  });
+	  this.objectUrl = url;
 	}
 	setTimeout(() => {
 	  this._action.show();
@@ -100,12 +106,12 @@ export class CropperAction extends Component {
   }
 
   geBodyStyle() {
-	return this.props.description ? 'top: 60px' : ' top: 36px;'
+	return this.props.description ? 'top: 60px' : ' top: 36px;';
   }
 
   componentWillUnmount() {
-	this.objectUrl && URL.revokeObjectURL(this.objectUrl)
-	this.cropper && this.cropper.destroy()
+	this.objectUrl && URL.revokeObjectURL(this.objectUrl);
+	this.cropper && this.cropper.destroy();
   }
 
   render(props, state, context) {
@@ -140,15 +146,21 @@ export class CropperAction extends Component {
 			</div>
 			<div className="uploader-action-foot">
 			  <button className="img-cropper__btn btn-cancel" onClick={this.close}>取消</button>
+			  <button className="img-cropper__btn btn-left" onClick={() => this.rotate(-90)}>
+				<i className="iconfont iconzuoxuanzhuan"></i>
+			  </button>
 			  <button className="img-cropper__btn btn-normal">
 				<input type="file" onChange={this.reload} className="img-cropper__insert-file-input"/>
 				<span>重新选择</span>
+			  </button>
+			  <button className="img-cropper__btn btn-right" onClick={() => this.rotate(90)}>
+				<i className="iconfont iconyouxuanzhuan"></i>
 			  </button>
 			  <button className="img-cropper__btn btn-primary" onClick={this.confirm}>确定</button>
 			</div>
 		  </div>
 		</Action>
-	)
+	);
   }
 }
 
@@ -158,5 +170,5 @@ export default function (options) {
 	document.body.appendChild(el);
 	options.promise = {reject, resolve};
 	render(<CropperAction {...options}/>, document.body, el);
-  })
+  });
 }
