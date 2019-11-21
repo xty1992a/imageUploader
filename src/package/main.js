@@ -35,6 +35,9 @@ const defaultOptions = {
   overSizeMessage: '您选择的文件过大',
   deleteRequest: void 0,
   toast: console.log,
+  accept: 'image/*',
+  capture: 'camera',
+  configInput: () => {}
 };
 
 class EmitAble {
@@ -63,6 +66,10 @@ export default class ImageUploader extends EmitAble {
 		...(opt.cropperOptions || {}),
 	  },
 	};
+	// ios设置capture可能导致直接打开摄像头而不能选择相册
+	if(/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+	  this.$options.capture = ''
+	}
 	if (opt.el && opt.el instanceof Element) {
 	  this.insertDom();
 	}
@@ -87,12 +94,18 @@ export default class ImageUploader extends EmitAble {
 	let input = document.createElement('input');
 	input.type = 'file';
 	input.addEventListener('change', this.uploadFile);
+	this.$options.accept && input.setAttribute('accept', this.$options.accept)
+	this.$options.capture && input.setAttribute('capture', this.$options.capture)
 	input.className = 'img-cropper__insert-file-input';
 	// 阻止事件冒泡,防止点击事件被拦截掉
 	if (this.$options.stop) {
 	  input.addEventListener('click', function (e) {
 		e.stopPropagation();
 	  });
+	}
+	try{
+		this.$options.configInput && this.$options.configInput(input)
+	}catch (e) {
 	}
 	return input;
   }
